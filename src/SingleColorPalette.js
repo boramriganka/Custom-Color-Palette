@@ -8,6 +8,7 @@ import { withStyles } from '@material-ui/styles';
 import styles from './styles/PaletteStyles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { ColorSelectionContext } from './contexts/ColorSelectionContext';
+import MetaTags from './components/MetaTags';
 
 class SingleColorPalette extends Component {
   static contextType = ColorSelectionContext;
@@ -63,14 +64,24 @@ class SingleColorPalette extends Component {
       );
     });
     
+    const { palette, colorId } = this.props;
+    const colorName = palette.colors[500]?.find(c => c.id === colorId)?.name || colorId;
+    
     return (
-      <div className={classes.Palette} ref={this.paletteRef}>
-        <Navbar 
-          showSlider={false} 
-          handleChange={this.changeFormat}
-          palette={this.props.palette}
-          paletteElement={this.paletteRef.current}
+      <>
+        <MetaTags
+          title={`${colorName} Shades - ${palette.paletteName}`}
+          description={`Explore all shades of ${colorName} from the ${palette.paletteName} palette. View color codes, test accessibility, and export in multiple formats.`}
+          keywords={`${colorName}, ${palette.paletteName}, color shades, color variations, ${colorId}, color palette`}
+          url={window.location.href}
         />
+        <div className={classes.Palette} ref={this.paletteRef}>
+          <Navbar 
+            showSlider={false} 
+            handleChange={this.changeFormat}
+            palette={this.props.palette}
+            paletteElement={this.paletteRef.current}
+          />
         <div className={classes.colors}>
           {colorBoxes}
           <div className={classes.goBack}>
@@ -91,7 +102,8 @@ class SingleColorPalette extends Component {
             paletteName={paletteName}
           />
         )}
-      </div>
+        </div>
+      </>
     );
   }
 }

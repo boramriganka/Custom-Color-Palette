@@ -3,43 +3,70 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="CustomColor - Professional color palette generator with WCAG accessibility checking, multi-format export, and intuitive design tools"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover" />
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Custom Color - Professional Color Palette Generator" />
+    <meta name="description" content="Create, customize, and export beautiful color palettes with WCAG accessibility checking, multi-format export, and intuitive design tools." />
+    <meta name="keywords" content="color palette, color picker, palette generator, color scheme, design tools, accessibility, WCAG, color export, CSS colors, design system" />
+    <meta name="author" content="Custom Color" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Custom Color" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Custom Color" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#64B5F6" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="theme-color" content="#64B5F6" />
+    <meta name="msapplication-navbutton-color" content="#64B5F6" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="%PUBLIC_URL%/icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="%PUBLIC_URL%/icon-96x96.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="%PUBLIC_URL%/icon-128x128.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="%PUBLIC_URL%/icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/icon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="384x384" href="%PUBLIC_URL%/icon-384x384.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/icon-512x512.png" />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/icon-16x16.png" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    
+    <!-- Manifest -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-    <title>CustomColor - Color Palette Generator</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://customcolor.app/" />
+    <meta property="og:title" content="Custom Color - Professional Color Palette Generator" />
+    <meta property="og:description" content="Create, customize, and export beautiful color palettes with WCAG accessibility checking, multi-format export, and intuitive design tools." />
+    <meta property="og:image" content="%PUBLIC_URL%/icon-512x512.png" />
+    <meta property="og:site_name" content="Custom Color" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://customcolor.app/" />
+    <meta property="twitter:title" content="Custom Color - Professional Color Palette Generator" />
+    <meta property="twitter:description" content="Create, customize, and export beautiful color palettes with WCAG accessibility checking, multi-format export, and intuitive design tools." />
+    <meta property="twitter:image" content="%PUBLIC_URL%/icon-512x512.png" />
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet" />
+    
+    <!-- Default Title (will be overridden by react-helmet in components) -->
+    <title>Custom Color - Color Palette Generator</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

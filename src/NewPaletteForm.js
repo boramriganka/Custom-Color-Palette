@@ -16,6 +16,7 @@ import ColorPickerForm from './ColorPickerForm';
 import ExportDialog from './ExportDialog';
 import styles from './styles/NewPaletteFormStyles';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import MetaTags from './components/MetaTags';
 
 const MAX_COLORS = 20;
 
@@ -159,9 +160,16 @@ class NewPaletteForm extends Component {
     };
 
     return (
-      <div className={classes.root} ref={this.paletteRef}>
-        <PaletteFormNav
-          open={open}
+      <>
+        <MetaTags
+          title="Create New Palette - Custom Color"
+          description="Create a custom color palette with our intuitive palette generator. Add colors, adjust shades, test accessibility, and export in multiple formats."
+          keywords="create palette, palette generator, color picker, new palette, custom colors, design palette"
+          url={window.location.href}
+        />
+        <div className={classes.root} ref={this.paletteRef}>
+          <PaletteFormNav
+            open={open}
           palettes={palettes}
           handleSubmit={this.handleSubmit}
           handleDrawerOpen={this.handleDrawerOpen}
@@ -280,7 +288,8 @@ class NewPaletteForm extends Component {
           palette={tempPalette}
           paletteElement={this.paletteRef.current}
         />
-      </div>
+        </div>
+      </>
     );
   }
 }
