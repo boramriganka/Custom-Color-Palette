@@ -257,32 +257,33 @@ export async function exportAsImage(elementOrRef, filename, format = 'png', capt
       // No need to find children, it's already the full-size version
     } else {
       // If still not found, look for the first child with actual content
-    if (contentElement === targetElement && targetElement.children && targetElement.children.length > 0) {
-      // Find the element that contains the actual preview content
-      for (let child of targetElement.children) {
-        // Check if this child has the actual content (not just a wrapper)
-        if (child.children && child.children.length > 0) {
-          contentElement = child;
-          break;
+      if (contentElement === targetElement && targetElement.children && targetElement.children.length > 0) {
+        // Find the element that contains the actual preview content
+        for (let child of targetElement.children) {
+          // Check if this child has the actual content (not just a wrapper)
+          if (child.children && child.children.length > 0) {
+            contentElement = child;
+            break;
+          }
         }
       }
-    }
-    
-    // Get the innermost content element (ImageExportPreview renders here)
-    let innerContent = contentElement;
-    while (innerContent.children && innerContent.children.length === 1) {
-      const child = innerContent.children[0];
-      // Stop if child has no meaningful content or is just a wrapper
-      if (child.scrollWidth <= innerContent.scrollWidth && 
-          child.scrollHeight <= innerContent.scrollHeight &&
-          child.offsetWidth === innerContent.offsetWidth) {
-        break;
+      
+      // Get the innermost content element (ImageExportPreview renders here)
+      let innerContent = contentElement;
+      while (innerContent.children && innerContent.children.length === 1) {
+        const child = innerContent.children[0];
+        // Stop if child has no meaningful content or is just a wrapper
+        if (child.scrollWidth <= innerContent.scrollWidth && 
+            child.scrollHeight <= innerContent.scrollHeight &&
+            child.offsetWidth === innerContent.offsetWidth) {
+          break;
+        }
+        innerContent = child;
       }
-      innerContent = child;
+      
+      // Use the innermost content for capture
+      contentElement = innerContent;
     }
-    
-    // Use the innermost content for capture
-    contentElement = innerContent;
     
     // Get actual dimensions - use the natural size, not the scaled/visible size
     let scrollWidth = contentElement.scrollWidth || contentElement.offsetWidth;
@@ -437,14 +438,7 @@ export async function exportAsImage(elementOrRef, filename, format = 'png', capt
             }
             
             // Ensure all text nodes are preserved
-            if (el.childNodes) {
-              el.childNodes.forEach((node) => {
-                if (node.nodeType === Node.TEXT_NODE) {
-                  // Preserve text content exactly
-                  node.textContent = node.textContent;
-                }
-              });
-            }
+            // Text nodes are automatically preserved by html2canvas
           });
         }
       },

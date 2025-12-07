@@ -6,6 +6,7 @@ import styles from './styles/PaletteStyles';
 import PaletteFooter from './PaletteFooter';
 import ColorSelectionManager from './ColorSelectionManager';
 import { ColorSelectionContext } from './contexts/ColorSelectionContext';
+import MetaTags from './components/MetaTags';
 
 class Palette extends Component {
   static contextType = ColorSelectionContext;
@@ -58,30 +59,38 @@ class Palette extends Component {
     });
     
     return (
-      <div className={classes.Palette} ref={this.paletteRef}>
-        <Navbar
-          showSlider={true}
-          level={level} 
-          changeLevel={this.changeLevel}
-          handleChange={this.changeFormat}
-          palette={this.props.palette}
-          paletteElement={this.paletteRef.current}
+      <>
+        <MetaTags
+          title={`${paletteName} - Color Palette`}
+          description={`Explore the ${paletteName} color palette with ${colors[level].length} shades. View color codes, test accessibility, and export in multiple formats.`}
+          keywords={`${paletteName}, color palette, ${colors[level].map(c => c.name).join(', ')}, color scheme, design colors`}
+          url={window.location.href}
         />
-        <div className={classes.colors}>
-          {colorBoxes}
-        </div>
-        <PaletteFooter paletteName={paletteName} emoji={emoji} colors={colors[level]} />
-        
-        {/* Color Selection Manager */}
-        {selectedColors.length > 0 && (
-          <ColorSelectionManager
-            selectedColors={selectedColors}
-            onRemoveColor={removeColorByIndex}
-            onClearAll={clearColors}
-            paletteName={paletteName}
+        <div className={classes.Palette} ref={this.paletteRef}>
+          <Navbar
+            showSlider={true}
+            level={level} 
+            changeLevel={this.changeLevel}
+            handleChange={this.changeFormat}
+            palette={this.props.palette}
+            paletteElement={this.paletteRef.current}
           />
-        )}
-      </div>
+          <div className={classes.colors}>
+            {colorBoxes}
+          </div>
+          <PaletteFooter paletteName={paletteName} emoji={emoji} colors={colors[level]} />
+          
+          {/* Color Selection Manager */}
+          {selectedColors.length > 0 && (
+            <ColorSelectionManager
+              selectedColors={selectedColors}
+              onRemoveColor={removeColorByIndex}
+              onClearAll={clearColors}
+              paletteName={paletteName}
+            />
+          )}
+        </div>
+      </>
     );
   }
 }
