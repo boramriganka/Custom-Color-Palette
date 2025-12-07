@@ -1,13 +1,31 @@
+const sizes = {
+  // Mobile small
+  xs: "(max-width: 480px)",
+  // Mobile
+  sm: "(max-width: 576px)",
+  // Tablet
+  md: "(max-width: 768px)",
+  // Tablet landscape
+  lg: "(max-width: 992px)",
+};
+
 export default {
     Palette :{ 
       height: "100vh",
       display: "flex",
       flexDirection: "column",
       backgroundColor: "#121212",
+      overflow: "hidden",
     },
     colors:{
       height:"90%",
-      overflow: "hidden",
+      overflow: "auto",
+      [`@media ${sizes.md}`]: {
+        height: "88%",
+      },
+      [`@media ${sizes.sm}`]: {
+        height: "85%",
+      },
     },
     goBack:{
         width : "20%",
@@ -25,6 +43,18 @@ export default {
         transition: "background-color 0.3s ease",
         "&:hover": {
           backgroundColor: "#444",
+        },
+        [`@media ${sizes.lg}`]: {
+          width: "25%",
+          height: "33.3333%",
+        },
+        [`@media ${sizes.md}`]: {
+          width: "33.3333%",
+          height: "25%",
+        },
+        [`@media ${sizes.sm}`]: {
+          width: "50%",
+          height: "20%",
         },
     },
     backButton: {
@@ -51,10 +81,31 @@ export default {
         "&:hover": {
           background: "rgba(255,255,255,0.4)",
           transform: "scale(1.05)",
-        }
+        },
+        [`@media ${sizes.md}`]: {
+          width: "100px",
+          height: "32px",
+          marginLeft: "-50px",
+          marginTop: "-16px",
+          fontSize: "0.85rem",
+        },
+        [`@media ${sizes.sm}`]: {
+          width: "80px",
+          height: "28px",
+          marginLeft: "-40px",
+          marginTop: "-14px",
+          fontSize: "0.75rem",
+        },
     },
     backIcon: {
         marginRight: "0.5rem",
         fontSize: "1.2rem",
+        [`@media ${sizes.md}`]: {
+          marginRight: "0.25rem",
+          fontSize: "1rem",
+        },
+        [`@media ${sizes.sm}`]: {
+          fontSize: "0.9rem",
+        },
     }
   }

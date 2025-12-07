@@ -13,6 +13,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import PaletteIcon from '@material-ui/icons/Palette';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import SecurityIcon from '@material-ui/icons/Security';
+import MetaTags from './components/MetaTags';
 
 class PaletteList extends Component {
   constructor(props) {
@@ -49,9 +50,16 @@ class PaletteList extends Component {
     const { openDeleteDialog } = this.state;
     
     return (
-      <div className={classes.root}>
-        {/* Animated Background */}
-        <div className={classes.animatedBackground}>
+      <>
+        <MetaTags
+          title="Color Palettes - Custom Color"
+          description="Browse and manage your color palettes. Create beautiful, accessible color schemes with professional tools and WCAG compliance checking."
+          keywords="color palettes, color schemes, palette library, color collection, design palettes, accessible colors"
+          url={window.location.href}
+        />
+        <div className={classes.root}>
+          {/* Animated Background */}
+          <div className={classes.animatedBackground}>
           <div className={classes.gradientOrb1}></div>
           <div className={classes.gradientOrb2}></div>
           <div className={classes.gradientOrb3}></div>
@@ -165,7 +173,8 @@ class PaletteList extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+        </div>
+      </>
     );
   }
 }

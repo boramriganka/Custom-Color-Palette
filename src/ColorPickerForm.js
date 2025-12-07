@@ -6,12 +6,18 @@ import { ChromePicker } from 'react-color';
 import Typography from '@material-ui/core/Typography';
 
 const styles = {
+  root: {
+    width: "100%",
+  },
   picker: {
     width: "100% !important",
     marginTop: "2rem",
     backgroundColor: "#2a2a2a !important",
     borderRadius: "8px !important",
     boxShadow: "0 4px 20px rgba(0,0,0,0.2) !important",
+    "@media (max-width: 768px)": {
+      marginTop: "1rem",
+    },
   },
   addColor: {
     width: "100%",
@@ -22,6 +28,15 @@ const styles = {
     color: "white",
     "&:hover": {
       backgroundColor: "#42A5F5",
+    },
+    "@media (max-width: 768px)": {
+      padding: "0.75rem",
+      fontSize: "1rem",
+      marginTop: "0.75rem",
+    },
+    "@media (max-width: 480px)": {
+      padding: "0.5rem",
+      fontSize: "0.9rem",
     },
   },
   colorNameInput: {
@@ -39,6 +54,9 @@ const styles = {
     "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
       borderBottomColor: "#64B5F6",
     },
+    "@media (max-width: 768px)": {
+      marginTop: "0.75rem",
+    },
   },
   heading: {
     width: "100%",
@@ -46,6 +64,14 @@ const styles = {
     color: "#e0e0e0",
     marginTop: "1.5rem",
     marginBottom: "0.5rem",
+    "@media (max-width: 768px)": {
+      fontSize: "1.25rem",
+      marginTop: "1rem",
+    },
+    "@media (max-width: 480px)": {
+      fontSize: "1.1rem",
+      marginTop: "0.75rem",
+    },
   },
 };
 

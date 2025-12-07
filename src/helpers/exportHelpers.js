@@ -217,9 +217,11 @@ function getContrastColor(hexColor) {
  * @param {HTMLElement} element - DOM element to capture
  * @param {string} filename - Output filename
  * @param {string} format - 'png' or 'jpeg'
+ * @param {object} palette - Palette object for creating export version
+ * @param {string} exportStyle - Style for export ('grid', 'card', 'strip', 'list')
  * @returns {Promise} Promise that resolves when export is complete
  */
-export async function exportAsImage(elementOrRef, filename, format = 'png', captureColorsOnly = true) {
+export async function exportAsImage(elementOrRef, filename, format = 'png', captureColorsOnly = true, palette = null, exportStyle = 'grid') {
   try {
     // Handle React refs
     const domElement = elementOrRef && elementOrRef.current ? elementOrRef.current : elementOrRef;
@@ -238,12 +240,219 @@ export async function exportAsImage(elementOrRef, filename, format = 'png', capt
       }
     }
     
-    const canvas = await html2canvas(targetElement, {
+    // Find the actual content element with the export target marker
+    let contentElement = targetElement;
+    
+    // Look for element marked for export
+    if (targetElement.querySelector) {
+      const exportTarget = targetElement.querySelector('[data-export-target="true"]');
+      if (exportTarget) {
+        contentElement = exportTarget;
+      }
+    }
+    
+    // If we have an export-only element (created in ExportDialog), use that directly
+    if (contentElement && contentElement.getAttribute && contentElement.getAttribute('data-export-only') === 'true') {
+      // This is the hidden export version, use it directly
+      // No need to find children, it's already the full-size version
+    } else {
+      // If still not found, look for the first child with actual content
+      if (contentElement === targetElement && targetElement.children && targetElement.children.length > 0) {
+        // Find the element that contains the actual preview content
+        for (let child of targetElement.children) {
+          // Check if this child has the actual content (not just a wrapper)
+          if (child.children && child.children.length > 0) {
+            contentElement = child;
+            break;
+          }
+        }
+      }
+      
+      // Get the innermost content element (ImageExportPreview renders here)
+      let innerContent = contentElement;
+      while (innerContent.children && innerContent.children.length === 1) {
+        const child = innerContent.children[0];
+        // Stop if child has no meaningful content or is just a wrapper
+        if (child.scrollWidth <= innerContent.scrollWidth && 
+            child.scrollHeight <= innerContent.scrollHeight &&
+            child.offsetWidth === innerContent.offsetWidth) {
+          break;
+        }
+        innerContent = child;
+      }
+      
+      // Use the innermost content for capture
+      contentElement = innerContent;
+    }
+    
+    // Get actual dimensions - use the natural size, not the scaled/visible size
+    let scrollWidth = contentElement.scrollWidth || contentElement.offsetWidth;
+    let scrollHeight = contentElement.scrollHeight || contentElement.offsetHeight;
+    
+    // If dimensions seem too small, check parent
+    if (scrollWidth < 100 || scrollHeight < 100) {
+      const parent = contentElement.parentElement;
+      if (parent) {
+        const parentWidth = parent.scrollWidth || parent.offsetWidth;
+        const parentHeight = parent.scrollHeight || parent.offsetHeight;
+        if (parentWidth > scrollWidth) scrollWidth = parentWidth;
+        if (parentHeight > scrollHeight) scrollHeight = parentHeight;
+      }
+    }
+    
+    // Store original styles for all relevant elements
+    const elementsToRestore = [];
+    const saveStyles = (el) => {
+      elementsToRestore.push({
+        element: el,
+        styles: {
+          transform: el.style.transform,
+          overflow: el.style.overflow,
+          position: el.style.position,
+          width: el.style.width,
+          height: el.style.height,
+          maxWidth: el.style.maxWidth,
+          maxHeight: el.style.maxHeight,
+        }
+      });
+    };
+    
+    // Save styles for content element and parents
+    saveStyles(contentElement);
+    let parent = contentElement.parentElement;
+    while (parent && parent !== document.body && elementsToRestore.length < 3) {
+      saveStyles(parent);
+      parent = parent.parentElement;
+    }
+    
+    // Temporarily adjust styles for capture - remove transforms and ensure visibility
+    contentElement.style.transform = 'none';
+    contentElement.style.overflow = 'visible';
+    contentElement.style.position = 'relative';
+    contentElement.style.width = scrollWidth + 'px';
+    contentElement.style.height = scrollHeight + 'px';
+    contentElement.style.maxWidth = 'none';
+    contentElement.style.maxHeight = 'none';
+    
+    // Ensure parent containers don't clip
+    let currentParent = contentElement.parentElement;
+    while (currentParent && currentParent !== document.body) {
+      const parentStyle = window.getComputedStyle(currentParent);
+      if (parentStyle.overflow === 'hidden' || parentStyle.overflow === 'auto') {
+        currentParent.style.overflow = 'visible';
+        saveStyles(currentParent);
+      }
+      currentParent = currentParent.parentElement;
+    }
+    
+    // Scroll to beginning
+    if (contentElement.scrollTop !== 0) contentElement.scrollTop = 0;
+    if (contentElement.scrollLeft !== 0) contentElement.scrollLeft = 0;
+    if (targetElement.scrollTop !== 0) targetElement.scrollTop = 0;
+    if (targetElement.scrollLeft !== 0) targetElement.scrollLeft = 0;
+    
+    // Wait for layout to settle and fonts to load
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // Ensure fonts are loaded
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+    
+    // Wait a bit more for rendering
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // Recalculate dimensions after style changes
+    const finalWidth = contentElement.scrollWidth || contentElement.offsetWidth || scrollWidth;
+    const finalHeight = contentElement.scrollHeight || contentElement.offsetHeight || scrollHeight;
+    
+    // Capture with proper options
+    const canvas = await html2canvas(contentElement, {
       backgroundColor: format === 'png' ? null : '#ffffff',
-      scale: 2, // Higher quality
+      scale: 2,
       logging: false,
       useCORS: true,
       allowTaint: true,
+      width: finalWidth,
+      height: finalHeight,
+      windowWidth: finalWidth,
+      windowHeight: finalHeight,
+      scrollX: 0,
+      scrollY: 0,
+      x: 0,
+      y: 0,
+      removeContainer: false,
+      imageTimeout: 20000,
+      foreignObjectRendering: false, // Use native text rendering
+      onclone: (clonedDoc, element) => {
+        // In the cloned document, ensure transforms are removed and text is visible
+        const clonedElement = element;
+        if (clonedElement) {
+          clonedElement.style.transform = 'none';
+          clonedElement.style.overflow = 'visible';
+          clonedElement.style.position = 'relative';
+          clonedElement.style.width = finalWidth + 'px';
+          clonedElement.style.height = finalHeight + 'px';
+          
+          // Fix all text elements to ensure proper rendering
+          const textElements = clonedElement.querySelectorAll('*');
+          textElements.forEach((el) => {
+            // Ensure text is not clipped
+            el.style.overflow = 'visible';
+            el.style.textOverflow = 'clip';
+            
+            // Get computed styles to preserve font sizes from export version
+            const computedStyle = window.getComputedStyle(el);
+            const fontSize = computedStyle.fontSize;
+            
+            // For hex code elements, ensure they render correctly with clear, readable text
+            if (el.textContent && (el.textContent.match(/^#[0-9A-Fa-f]{6}$/i) || el.classList.contains('gridCode') || el.classList.contains('cardCode') || el.classList.contains('stripCode') || el.classList.contains('listDetail'))) {
+              el.style.whiteSpace = 'nowrap';
+              el.style.wordBreak = 'normal';
+              el.style.overflowWrap = 'normal';
+              el.style.fontFamily = 'monospace, "Courier New", Courier, sans-serif';
+              el.style.fontWeight = '700';
+              // Preserve the export font size if it exists, otherwise use a minimum readable size
+              if (fontSize && parseFloat(fontSize) > 0) {
+                el.style.fontSize = fontSize;
+              } else {
+                el.style.fontSize = '1.6rem'; // Minimum readable size for export
+              }
+              el.style.color = '#222';
+              el.style.textShadow = 'none';
+              // Ensure text content is correct
+              if (el.textContent.match(/^#[0-9A-Fa-f]{6}$/i)) {
+                el.textContent = el.textContent.toUpperCase();
+              }
+            }
+            
+            // For color names, ensure they're readable
+            if (el.classList.contains('gridName') || el.classList.contains('cardName') || el.classList.contains('stripName') || el.classList.contains('listName')) {
+              el.style.wordBreak = 'break-word';
+              el.style.overflowWrap = 'break-word';
+              el.style.whiteSpace = 'normal';
+              // Preserve export font size
+              if (fontSize && parseFloat(fontSize) > 0) {
+                el.style.fontSize = fontSize;
+              }
+            }
+            
+            // Ensure all text nodes are preserved
+            // Text nodes are automatically preserved by html2canvas
+          });
+        }
+      },
+    });
+    
+    // Restore all original styles
+    elementsToRestore.forEach(({ element, styles }) => {
+      element.style.transform = styles.transform;
+      element.style.overflow = styles.overflow;
+      element.style.position = styles.position;
+      element.style.width = styles.width;
+      element.style.height = styles.height;
+      element.style.maxWidth = styles.maxWidth;
+      element.style.maxHeight = styles.maxHeight;
     });
     
     return new Promise((resolve, reject) => {
