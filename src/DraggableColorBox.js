@@ -15,7 +15,23 @@ const styles = {
     "&:hover svg": {
       color: "white",
       transform: "scale(1.3)"
-    }
+    },
+    "@media (max-width: 1200px)": {
+      width: "25%",
+      height: "20%",
+    },
+    "@media (max-width: 992px)": {
+      width: "25%",
+      height: "20%",
+    },
+    "@media (max-width: 768px)": {
+      width: "33.3333%",
+      height: "14.2857%",
+    },
+    "@media (max-width: 576px)": {
+      width: "50%",
+      height: "10%",
+    },
   },
   boxContent: {
     position: "absolute",
@@ -33,11 +49,27 @@ const styles = {
     fontWeight: "500",
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    "@media (max-width: 768px)": {
+      padding: "6px",
+      fontSize: "10px",
+      letterSpacing: "0.5px",
+    },
+    "@media (max-width: 576px)": {
+      padding: "4px",
+      fontSize: "8px",
+      letterSpacing: "0",
+    },
   },
   deleteIcon: {
     transition: "all 0.3s ease",
-    color: "rgba(0, 0, 0, 0.5)"
+    color: "rgba(0, 0, 0, 0.5)",
+    "@media (max-width: 768px)": {
+      fontSize: "1rem",
+    },
+    "@media (max-width: 576px)": {
+      fontSize: "0.875rem",
+    },
   }
 };
 

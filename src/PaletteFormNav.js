@@ -25,6 +25,7 @@ const styles = theme => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#1a1a1a',
+    padding: '0.25rem 0',
   },
   appBarShift: {
     width: `calc(100% - ${DRAWER_WIDTH}px)`,
@@ -33,18 +34,35 @@ const styles = theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    [theme.breakpoints.down('sm')]: {
+      width: '0%',
+      marginLeft: '100%',
+    },
   },
   menuButton: {
     marginLeft: 12,
     marginRight: 20,
     color: '#f5f5f5',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 4,
+      marginRight: 8,
+    },
   },
   title: {
     color: '#f5f5f5',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1rem',
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '0.9rem',
+    },
   },
   navBtns: {
     marginRight: '1rem',
     display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: '0.5rem',
+    },
   },
   button: {
     margin: '0 0.5rem',
@@ -52,6 +70,16 @@ const styles = theme => ({
     backgroundColor: 'rgba(0, 0, 0, 0.15)',
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: '0 0.25rem',
+      padding: '6px 12px',
+      fontSize: '0.75rem',
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '4px 8px',
+      fontSize: '0.7rem',
+      minWidth: 'auto',
     },
   },
   saveBtn: {
